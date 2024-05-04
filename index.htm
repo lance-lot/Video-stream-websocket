@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <script src="js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+   <title>websocket通信客户端</title>
+       <script type="text/javascript">
+         function WebSocketTest()
+         {
+            if ("WebSocket" in window)
+            {
+               // 打开一个 web socket
+               var ws = new WebSocket("ws://10.245.85.246:8888");
+
+               // 连接建立后的回调函数
+               ws.onopen = function()
+               {
+               // Web Socket 已连接上，使用 send() 方法发送数据
+                  ws.send("begin");
+               };
+
+               // 接收到服务器消息后的回调函数
+               ws.onmessage = function (evt)
+               {
+                  var received_msg = evt.data;
+                   //   alert("收到消息："+received_msg);
+                  // console.log("要输出的内容" + received_msg);
+             blobToDataURI(received_msg,function(result){    //blob格式再转换为base64格式
+                  document.getElementById('img').src = result;
+                  })
+               };
+
+               // 连接关闭后的回调函数
+               ws.onclose = function()
+               {
+                  // 关闭 websocket
+                  alert("连接已关闭...");
+               };
+            }
+            else
+            {
+               // 浏览器不支持 WebSocket
+               alert("您的浏览器不支持 WebSocket!");
+            }
+         }
+
+         function blobToDataURI(blob, callback) {
+            var reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = function (e) {
+               callback(e.target.result);
+            }
+         }
+
+      </script>
+   </head>
+   <body onload="WebSocketTest()">
+	<div><img src="" id="img" alt=""></div>
+   </body>
+</html>
+
